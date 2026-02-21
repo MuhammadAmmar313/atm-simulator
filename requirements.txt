@@ -1,6 +1,5 @@
+# requirements.txt - Lightweight version
 flask
 flask-cors
 werkzeug
-transformers
-torch
-
+gunicorn

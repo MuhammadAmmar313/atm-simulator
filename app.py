@@ -1,5 +1,5 @@
-# app.py
-from flask import Flask, request, jsonify, render_template, session
+# app.py - Lightweight version without heavy AI dependencies
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
@@ -7,7 +7,6 @@ import os
 from datetime import datetime, timedelta
 import random
 import string
-from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -31,7 +30,6 @@ def save_data(data):
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2, default=str)
 
-# Initialize empty data (NO DEMO ACCOUNTS)
 def init_data():
     data = load_data()
     save_data(data)
@@ -68,7 +66,6 @@ def generate_transaction_id():
 def generate_account_number():
     data = load_data()
     while True:
-        # Generate 6-digit account number
         acc_num = ''.join(random.choices(string.digits, k=6))
         if acc_num not in data['accounts']:
             return acc_num
@@ -84,7 +81,6 @@ def register():
     pin = data.get('pin', '')
     initial_deposit = float(data.get('initial_deposit', 0))
     
-    # Validation
     if not name or len(name) < 2:
         return jsonify({'success': False, 'message': 'Enter valid name (min 2 characters)'}), 400
     
@@ -95,11 +91,8 @@ def register():
         return jsonify({'success': False, 'message': 'Initial deposit cannot be negative'}), 400
     
     db_data = load_data()
-    
-    # Generate unique account number
     account_number = generate_account_number()
     
-    # Create account
     db_data['accounts'][account_number] = {
         'pin_hash': generate_password_hash(pin),
         'balance': initial_deposit,
@@ -116,7 +109,6 @@ def register():
         }
     }
     
-    # Record initial deposit if > 0
     if initial_deposit > 0:
         transaction = {
             'id': generate_transaction_id(),
@@ -125,8 +117,7 @@ def register():
             'timestamp': datetime.now().isoformat(),
             'balance_after': initial_deposit,
             'account_number': account_number,
-            'note': 'Initial deposit',
-            'sentiment_analysis': None
+            'note': 'Initial deposit'
         }
         db_data['transactions'].append(transaction)
     
@@ -151,7 +142,6 @@ def login():
     if not account_number or not pin:
         return jsonify({'success': False, 'message': 'Account number and PIN required'}), 400
     
-    # Check if account is locked
     is_locked, minutes_remaining = check_account_lock(account_number)
     if is_locked:
         return jsonify({
@@ -168,11 +158,9 @@ def login():
     account = db_data['accounts'][account_number]
     
     if check_password_hash(account['pin_hash'], pin):
-        # Successful login - reset failed attempts
         if account_number in db_data['failed_attempts']:
             del db_data['failed_attempts'][account_number]
         
-        # Generate session token
         session_token = generate_transaction_id()
         db_data['session_tokens'][session_token] = {
             'account_number': account_number,
@@ -194,7 +182,6 @@ def login():
             }
         })
     else:
-        # Failed attempt
         if account_number not in db_data['failed_attempts']:
             db_data['failed_attempts'][account_number] = 0
         db_data['failed_attempts'][account_number] += 1
@@ -224,7 +211,7 @@ def logout():
     db_data = load_data()
     if token in db_data['session_tokens']:
         del db_data['session_tokens'][token]
-        save_data(db_data)
+        save_data(data)
     
     return jsonify({'success': True})
 
@@ -245,7 +232,6 @@ def get_balance():
     account_number = session_data['account_number']
     account = db_data['accounts'][account_number]
     
-    # Update session expiry
     db_data['session_tokens'][token]['expires_at'] = (datetime.now() + timedelta(minutes=30)).isoformat()
     save_data(db_data)
     
@@ -289,7 +275,6 @@ def withdraw():
     if amount > account['balance']:
         return jsonify({'success': False, 'message': 'Insufficient funds'}), 400
     
-    # Perform withdrawal
     account['balance'] -= amount
     account['daily_withdrawn'] += amount
     
@@ -300,8 +285,7 @@ def withdraw():
         'timestamp': datetime.now().isoformat(),
         'balance_after': account['balance'],
         'account_number': account_number,
-        'note': note,
-        'sentiment_analysis': None
+        'note': note
     }
     
     db_data['transactions'].append(transaction)
@@ -337,7 +321,6 @@ def deposit():
     account_number = session_data['account_number']
     account = db_data['accounts'][account_number]
     
-    # Perform deposit
     account['balance'] += amount
     
     transaction = {
@@ -347,8 +330,7 @@ def deposit():
         'timestamp': datetime.now().isoformat(),
         'balance_after': account['balance'],
         'account_number': account_number,
-        'note': note,
-        'sentiment_analysis': None
+        'note': note
     }
     
     db_data['transactions'].append(transaction)
@@ -395,7 +377,6 @@ def transfer():
     if amount > sender['balance']:
         return jsonify({'success': False, 'message': 'Insufficient funds'}), 400
     
-    # Perform transfer
     sender['balance'] -= amount
     db_data['accounts'][to_account]['balance'] += amount
     
@@ -407,8 +388,7 @@ def transfer():
         'from_account': from_account,
         'to_account': to_account,
         'balance_after': sender['balance'],
-        'note': note,
-        'sentiment_analysis': None
+        'note': note
     }
     
     db_data['transactions'].append(transaction)
@@ -436,7 +416,6 @@ def get_transactions():
     session_data = db_data['session_tokens'][token]
     account_number = session_data['account_number']
     
-    # Filter transactions for this account
     account_transactions = [
         t for t in db_data['transactions'] 
         if t.get('account_number') == account_number or 
@@ -444,10 +423,8 @@ def get_transactions():
            t.get('to_account') == account_number
     ]
     
-    # Sort by timestamp descending
     account_transactions.sort(key=lambda x: x['timestamp'], reverse=True)
     
-    # Update session expiry
     db_data['session_tokens'][token]['expires_at'] = (datetime.now() + timedelta(minutes=30)).isoformat()
     save_data(db_data)
     
@@ -505,7 +482,6 @@ def fast_cash():
     if account['daily_withdrawn'] + amount > account['daily_limit']:
         return jsonify({'success': False, 'message': 'Daily limit exceeded'}), 400
     
-    # Perform fast cash withdrawal
     account['balance'] -= amount
     account['daily_withdrawn'] += amount
     
