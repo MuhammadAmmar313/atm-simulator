@@ -1,0 +1,1856 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <title>SecureATM Pro</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(-10%, -10%) rotate(0deg); }
+            50% { transform: translate(10%, 10%) rotate(180deg); }
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-text-fill-color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Auth Screen (Login/Register) */
+        .auth-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: var(--surface);
+            padding: 5px;
+            border-radius: 16px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .auth-form {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .auth-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.4);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .modern-input {
+            width: 100%;
+            padding: 18px 20px 18px 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .modern-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .pin-container {
+            margin: 30px 0;
+        }
+
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .pin-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--surface-light);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pin-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .pin-dot.active::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            animation: pulseRing 1s infinite;
+        }
+
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .pin-key {
+            aspect-ratio: 1;
+            background: var(--surface);
+            border: none;
+            border-radius: 20px;
+            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pin-key::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .pin-key span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .pin-key:active {
+            transform: scale(0.95);
+        }
+
+        .pin-key:active::before {
+            opacity: 1;
+        }
+
+        .pin-key.delete {
+            color: var(--danger);
+        }
+
+        .pin-key.delete::before {
+            background: var(--danger);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 18px;
+            background: var(--surface);
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-light);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            padding: 20px;
+        }
+
+        .balance-swiper {
+            width: 100%;
+            padding: 20px 0 40px;
+        }
+
+        .swiper-slide {
+            width: 85%;
+            height: auto;
+        }
+
+        .balance-card {
+            background: var(--gradient-1);
+            border-radius: 28px;
+            padding: 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        }
+
+        .balance-card.card-2 {
+            background: var(--gradient-2);
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.3);
+        }
+
+        .balance-card.card-3 {
+            background: var(--gradient-3);
+            box-shadow: 0 20px 40px rgba(79, 172, 254, 0.3);
+        }
+
+        .card-chip {
+            width: 50px;
+            height: 35px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .card-chip::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+        }
+
+        .card-balance {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .card-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card-holder {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .card-type {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .actions-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .action-item:active {
+            transform: scale(0.9);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--surface);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-item:hover .action-icon {
+            background: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .action-icon.send { color: var(--secondary); }
+        .action-icon.receive { color: var(--accent); }
+        .action-icon.swap { color: var(--warning); }
+        .action-icon.more { color: var(--primary); }
+
+        .action-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .transaction-item {
+            background: var(--surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .transaction-item:hover {
+            background: var(--surface-light);
+            transform: translateX(5px);
+        }
+
+        .tx-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .tx-icon.income {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+        }
+
+        .tx-icon.expense {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .tx-icon.transfer {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .tx-details {
+            flex: 1;
+        }
+
+        .tx-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .tx-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .tx-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .tx-amount.positive { color: var(--accent); }
+        .tx-amount.negative { color: var(--danger); }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
+            border-top: 1px solid var(--glass-border);
+            padding: 15px 30px calc(15px + env(safe-area-inset-bottom));
+            display: flex;
+            justify-content: space-around;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+            padding: 5px 15px;
+            border-radius: 12px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .nav-item i {
+            font-size: 1.3rem;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+            align-items: flex-end;
+        }
+
+        .modal-sheet {
+            background: var(--surface);
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            border-radius: 32px 32px 0 0;
+            padding: 30px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-sheet {
+            transform: translateY(0);
+        }
+
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--surface-light);
+            border-radius: 2px;
+            margin: 0 auto 30px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .amount-btn {
+            padding: 20px;
+            background: var(--bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .amount-btn:hover, .amount-btn:active {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .custom-amount {
+            margin-bottom: 30px;
+        }
+
+        .amount-display {
+            background: var(--bg);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .amount-value {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--primary);
+        }
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .num-key {
+            aspect-ratio: 1.5;
+            background: var(--bg);
+            border: none;
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .num-key:active {
+            background: var(--primary);
+            transform: scale(0.95);
+        }
+
+        .loading-screen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 5000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .loading-screen.active {
+            display: flex;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
+        .loader-ring {
+            position: absolute;
+            inset: 0;
+            border: 4px solid transparent;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-ring:nth-child(2) {
+            inset: 10px;
+            border-top-color: var(--secondary);
+            animation-duration: 1.5s;
+            animation-direction: reverse;
+        }
+
+        .loader-ring:nth-child(3) {
+            inset: 20px;
+            border-top-color: var(--accent);
+            animation-duration: 2s;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--surface);
+            padding: 16px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 6000;
+            opacity: 0;
+            transition: all 0.3s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { border-color: var(--accent); }
+        .toast.error { border-color: var(--danger); }
+
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
+        .swiper-pagination-bullet {
+            background: var(--text-muted);
+            opacity: 0.3;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--primary);
+            opacity: 1;
+            width: 20px;
+            border-radius: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .account-info {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-family: 'Space Grotesk', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <div class="app">
+        <!-- Auth Screen (Login/Register) -->
+        <div class="auth-screen" id="authScreen">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+                <button class="auth-tab" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div class="auth-form" id="loginForm">
+                <div class="auth-header">
+                    <div class="auth-avatar">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2 style="font-size: 1.8rem; margin-bottom: 8px; font-family: 'Space Grotesk', sans-serif;">Welcome Back</h2>
+                    <p style="color: var(--text-muted);">Enter your credentials</p>
+                </div>
+
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" class="modern-input" id="loginAccount" placeholder="Account Number" maxlength="6">
+                </div>
+
+                <div class="pin-container">
+                    <div class="pin-dots" id="loginPinDots">
+                        <div class="pin-dot"></div>
+                        <div class="pin-dot"></div>
+                        <div class="pin-dot"></div>
+                        <div class="pin-dot"></div>
+                    </div>
+
+                    <div class="pin-pad">
+                        <button class="pin-key" onclick="enterLoginPin(1)"><span>1</span></button>
+                        <button class="pin-key" onclick="enterLoginPin(2)"><span>2</span></button>
+                        <button class="pin-key" onclick="enterLoginPin(3)"><span>3</span></button>
+                        <button class="pin-key" onclick="enterLoginPin(4)"><span>4</span></button>
+                        <button class="pin-key" onclick="enterLoginPin(5)"><span>5</span></button>
+                        <button class="pin-key" onclick="enterLoginPin(6)"><span>6</span></button>
+                        <button class="pin-key" onclick="enterLoginPin(7)"><span>7</span></button>
+                        <button class="pin-key" onclick="enterLoginPin(8)"><span>8</span></button>
+                        <button class="pin-key" onclick="enterLoginPin(9)"><span>9</span></button>
+                        <button class="pin-key" style="visibility: hidden;"><span></span></button>
+                        <button class="pin-key" onclick="enterLoginPin(0)"><span>0</span></button>
+                        <button class="pin-key delete" onclick="deleteLoginPin()"><span><i class="fas fa-backspace"></i></span></button>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="login()">
+                    <i class="fas fa-fingerprint" style="margin-right: 10px;"></i>
+                    Access Account
+                </button>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-form" id="registerForm" style="display: none;">
+                <div class="auth-header">
+                    <div class="auth-avatar" style="background: var(--gradient-2);">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h2 style="font-size: 1.8rem; margin-bottom: 8px; font-family: 'Space Grotesk', sans-serif;">Create Account</h2>
+                    <p style="color: var(--text-muted);">Join SecureATM today</p>
+                </div>
+
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" class="modern-input" id="regName" placeholder="Full Name" maxlength="50">
+                </div>
+
+                <div class="input-wrapper">
+                    <i class="fas fa-dollar-sign"></i>
+                    <input type="number" class="modern-input" id="regDeposit" placeholder="Initial Deposit (Optional)" min="0" step="0.01">
+                </div>
+
+                <div class="pin-container">
+                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 15px;">Create 4-digit PIN</p>
+                    <div class="pin-dots" id="regPinDots">
+                        <div class="pin-dot"></div>
+                        <div class="pin-dot"></div>
+                        <div class="pin-dot"></div>
+                        <div class="pin-dot"></div>
+                    </div>
+
+                    <div class="pin-pad">
+                        <button class="pin-key" onclick="enterRegPin(1)"><span>1</span></button>
+                        <button class="pin-key" onclick="enterRegPin(2)"><span>2</span></button>
+                        <button class="pin-key" onclick="enterRegPin(3)"><span>3</span></button>
+                        <button class="pin-key" onclick="enterRegPin(4)"><span>4</span></button>
+                        <button class="pin-key" onclick="enterRegPin(5)"><span>5</span></button>
+                        <button class="pin-key" onclick="enterRegPin(6)"><span>6</span></button>
+                        <button class="pin-key" onclick="enterRegPin(7)"><span>7</span></button>
+                        <button class="pin-key" onclick="enterRegPin(8)"><span>8</span></button>
+                        <button class="pin-key" onclick="enterRegPin(9)"><span>9</span></button>
+                        <button class="pin-key" style="visibility: hidden;"><span></span></button>
+                        <button class="pin-key" onclick="enterRegPin(0)"><span>0</span></button>
+                        <button class="pin-key delete" onclick="deleteRegPin()"><span><i class="fas fa-backspace"></i></span></button>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="register()" style="background: var(--gradient-2);">
+                    <i class="fas fa-user-plus" style="margin-right: 10px;"></i>
+                    Create Account
+                </button>
+
+                <button class="btn-secondary" onclick="switchTab('login')">
+                    Already have an account? Login
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard">
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+                    SecureATM
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button style="background: none; border: none; color: var(--text); font-size: 1.2rem; cursor: pointer;" onclick="showAccountInfo()">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                    <button style="background: none; border: none; color: var(--text); font-size: 1.2rem; cursor: pointer;" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="swiper balance-swiper">
+                <div class="swiper-wrapper" id="balanceCards">
+                    <div class="swiper-slide">
+                        <div class="balance-card">
+                            <div class="card-chip"></div>
+                            <div class="card-balance" id="mainBalance">$0.00</div>
+                            <div class="card-label">Available Balance</div>
+                            <div class="card-footer">
+                                <span class="card-holder" id="cardHolder">User</span>
+                                <span class="card-type"><i class="fab fa-cc-visa"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="balance-card card-2">
+                            <div class="card-chip"></div>
+                            <div class="card-balance" id="dailyLimit">$5,000</div>
+                            <div class="card-label">Daily Limit</div>
+                            <div class="card-footer">
+                                <span class="card-holder">Remaining</span>
+                                <span class="card-type" id="dailyRemaining">$5,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <div class="actions-title">
+                <i class="fas fa-bolt" style="color: var(--primary);"></i>
+                Quick Actions
+            </div>
+
+            <div class="actions-grid">
+                <div class="action-item" onclick="openModal('send')">
+                    <div class="action-icon send"><i class="fas fa-paper-plane"></i></div>
+                    <span class="action-label">Send</span>
+                </div>
+                <div class="action-item" onclick="openModal('receive')">
+                    <div class="action-icon receive"><i class="fas fa-download"></i></div>
+                    <span class="action-label">Receive</span>
+                </div>
+                <div class="action-item" onclick="openModal('swap')">
+                    <div class="action-icon swap"><i class="fas fa-exchange-alt"></i></div>
+                    <span class="action-label">Transfer</span>
+                </div>
+                <div class="action-item" onclick="openModal('more')">
+                    <div class="action-icon more"><i class="fas fa-ellipsis-h"></i></div>
+                    <span class="action-label">More</span>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h3 class="section-title">Recent Transactions</h3>
+                <button class="filter-btn" onclick="refreshTransactions()"><i class="fas fa-sync-alt"></i></button>
+            </div>
+
+            <div class="transaction-list" id="transactionList">
+                <div class="empty-state">
+                    <i class="fas fa-receipt"></i>
+                    <p>No transactions yet</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" id="bottomNav" style="display: none;">
+            <a href="#" class="nav-item active" onclick="showTab('home')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showTab('cards')">
+                <i class="fas fa-credit-card"></i>
+                <span>Cards</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showTab('analytics')">
+                <i class="fas fa-chart-pie"></i>
+                <span>Stats</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showTab('profile')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-handle"></div>
+            <h3 class="modal-title" id="modalTitle">Transaction</h3>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading">
+        <div class="loader">
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+        </div>
+        <p style="color: var(--text-muted);">Processing...</p>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Global State
+        let currentToken = null;
+        let currentAccount = null;
+        let loginPinBuffer = '';
+        let regPinBuffer = '';
+        let currentAmount = '';
+        let swiper = null;
+        let currentModal = '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('SecureATM Pro initialized - No Demo Data');
+        });
+
+        // Tab Switching
+        function switchTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'login') {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+            } else {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+            }
+        }
+
+        // Login PIN
+        function enterLoginPin(num) {
+            if (loginPinBuffer.length < 4) {
+                loginPinBuffer += num;
+                updateLoginPinDisplay();
+                if (loginPinBuffer.length === 4) {
+                    setTimeout(login, 300);
+                }
+            }
+        }
+
+        function deleteLoginPin() {
+            loginPinBuffer = loginPinBuffer.slice(0, -1);
+            updateLoginPinDisplay();
+        }
+
+        function updateLoginPinDisplay() {
+            const dots = document.querySelectorAll('#loginPinDots .pin-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index < loginPinBuffer.length);
+            });
+        }
+
+        // Register PIN
+        function enterRegPin(num) {
+            if (regPinBuffer.length < 4) {
+                regPinBuffer += num;
+                updateRegPinDisplay();
+            }
+        }
+
+        function deleteRegPin() {
+            regPinBuffer = regPinBuffer.slice(0, -1);
+            updateRegPinDisplay();
+        }
+
+        function updateRegPinDisplay() {
+            const dots = document.querySelectorAll('#regPinDots .pin-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index < regPinBuffer.length);
+            });
+        }
+
+        // Register
+        async function register() {
+            const name = document.getElementById('regName').value.trim();
+            const deposit = parseFloat(document.getElementById('regDeposit').value) || 0;
+
+            if (!name || name.length < 2) {
+                showToast('Enter valid name (min 2 characters)', 'error');
+                return;
+            }
+
+            if (regPinBuffer.length !== 4) {
+                showToast('Enter 4-digit PIN', 'error');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        pin: regPinBuffer,
+                        initial_deposit: deposit
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast(`Account created! Number: ${data.account.number}`, 'success');
+                    setTimeout(() => {
+                        switchTab('login');
+                        document.querySelector('.auth-tab').click();
+                    }, 2000);
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Registration failed', 'error');
+            } finally {
+                showLoading(false);
+                regPinBuffer = '';
+                updateRegPinDisplay();
+            }
+        }
+
+        // Login
+        async function login() {
+            const accountNumber = document.getElementById('loginAccount').value;
+
+            if (!accountNumber || loginPinBuffer.length !== 4) {
+                showToast('Enter account number and PIN', 'error');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        account_number: accountNumber,
+                        pin: loginPinBuffer
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentToken = data.token;
+                    currentAccount = data.account;
+                    showDashboard();
+                    showToast('Welcome back, ' + data.account.name + '!', 'success');
+                } else {
+                    showToast(data.message, 'error');
+                    loginPinBuffer = '';
+                    updateLoginPinDisplay();
+                }
+            } catch (error) {
+                showToast('Connection error', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Show Dashboard
+        function showDashboard() {
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('bottomNav').style.display = 'flex';
+
+            initSwiper();
+            updateDashboard();
+            loadTransactions();
+        }
+
+        // Initialize Swiper
+        function initSwiper() {
+            if (swiper) swiper.destroy();
+
+            swiper = new Swiper('.balance-swiper', {
+                effect: 'cards',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                cardsEffect: {
+                    perSlideOffset: 10,
+                    perSlideRotate: 2,
+                    slideShadows: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+            });
+        }
+
+        // Update Dashboard
+        async function updateDashboard() {
+            try {
+                const response = await fetch('/api/balance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: currentToken })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('mainBalance').textContent = '$' + data.balance.toFixed(2);
+                    document.getElementById('dailyRemaining').textContent = '$' + data.daily_remaining.toFixed(2);
+                    document.getElementById('cardHolder').textContent = currentAccount.name;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Load Transactions
+        async function loadTransactions() {
+            try {
+                const response = await fetch('/api/transactions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: currentToken, limit: 10 })
+                });
+
+                const data = await response.json();
+                const list = document.getElementById('transactionList');
+
+                if (data.success && data.transactions.length > 0) {
+                    list.innerHTML = data.transactions.map(t => createTransactionHTML(t)).join('');
+                } else {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-receipt"></i>
+                            <p>No transactions yet</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function createTransactionHTML(t) {
+            const configs = {
+                deposit: { icon: 'fa-arrow-down', class: 'income', sign: '+' },
+                withdrawal: { icon: 'fa-arrow-up', class: 'expense', sign: '-' },
+                fast_cash: { icon: 'fa-bolt', class: 'expense', sign: '-' },
+                transfer: { icon: 'fa-exchange-alt', class: 'transfer', sign: t.to_account === currentAccount.number ? '+' : '-' }
+            };
+
+            const config = configs[t.type] || configs.deposit;
+            const isPositive = config.sign === '+';
+            const date = new Date(t.timestamp).toLocaleDateString('en-US', {
+                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+
+            return `
+                <div class="transaction-item">
+                    <div class="tx-icon ${config.class}">
+                        <i class="fas ${config.icon}"></i>
+                    </div>
+                    <div class="tx-details">
+                        <div class="tx-title">${t.type.charAt(0).toUpperCase() + t.type.slice(1)}</div>
+                        <div class="tx-date">${date}</div>
+                    </div>
+                    <div class="tx-amount ${isPositive ? 'positive' : 'negative'}">
+                        ${config.sign}$${t.amount.toFixed(2)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modal Functions
+        function openModal(type) {
+            currentModal = type;
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            const title = document.getElementById('modalTitle');
+
+            const configs = {
+                send: { title: 'Withdraw Money', html: getWithdrawHTML() },
+                receive: { title: 'Deposit Money', html: getDepositHTML() },
+                swap: { title: 'Transfer Money', html: getTransferHTML() },
+                more: { title: 'More Options', html: getMoreHTML() }
+            };
+
+            const config = configs[type];
+            title.textContent = config.title;
+            content.innerHTML = config.html;
+
+            modal.classList.add('active');
+        }
+
+        function getWithdrawHTML() {
+            return `
+                <div class="custom-amount">
+                    <div class="amount-display">
+                        <div class="amount-value" id="amountValue">$0</div>
+                    </div>
+                    <div class="numpad">
+                        ${[1,2,3,4,5,6,7,8,9].map(n => `<button class="num-key" onclick="enterAmount(${n})">${n}</button>`).join('')}
+                        <button class="num-key" onclick="enterAmount('.')">.</button>
+                        <button class="num-key" onclick="enterAmount(0)">0</button>
+                        <button class="num-key" onclick="deleteAmount()" style="color: var(--danger);"><i class="fas fa-backspace"></i></button>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="processWithdraw()">Withdraw Now</button>
+            `;
+        }
+
+        function getDepositHTML() {
+            return `
+                <div class="amount-grid">
+                    <button class="amount-btn" onclick="quickDeposit(100)">$100</button>
+                    <button class="amount-btn" onclick="quickDeposit(500)">$500</button>
+                    <button class="amount-btn" onclick="quickDeposit(1000)">$1000</button>
+                    <button class="amount-btn" onclick="quickDeposit(5000)">$5000</button>
+                    <button class="amount-btn" onclick="quickDeposit(10000)">$10,000</button>
+                    <button class="amount-btn" onclick="customDeposit()" style="background: var(--gradient-1);">Custom</button>
+                </div>
+            `;
+        }
+
+        function getTransferHTML() {
+            return `
+                <div class="input-wrapper" style="margin-bottom: 20px;">
+                    <i class="fas fa-user"></i>
+                    <input type="text" class="modern-input" id="transferTo" placeholder="Recipient Account Number" maxlength="6">
+                </div>
+                <div class="amount-grid">
+                    <button class="amount-btn" onclick="quickTransfer(50)">$50</button>
+                    <button class="amount-btn" onclick="quickTransfer(100)">$100</button>
+                    <button class="amount-btn" onclick="quickTransfer(200)">$200</button>
+                    <button class="amount-btn" onclick="quickTransfer(500)">$500</button>
+                    <button class="amount-btn" onclick="quickTransfer(1000)">$1000</button>
+                    <button class="amount-btn" onclick="customTransfer()" style="background: var(--gradient-2);">Custom</button>
+                </div>
+            `;
+        }
+
+        function getMoreHTML() {
+            return `
+                <div style="display: grid; gap: 15px;">
+                    <button class="btn-primary" onclick="showAccountInfo()" style="background: var(--surface);">
+                        <i class="fas fa-info-circle" style="margin-right: 10px;"></i> Account Info
+                    </button>
+                    <button class="btn-primary" onclick="changePin()" style="background: var(--surface);">
+                        <i class="fas fa-key" style="margin-right: 10px;"></i> Change PIN
+                    </button>
+                    <button class="btn-primary" onclick="refreshTransactions()" style="background: var(--surface);">
+                        <i class="fas fa-sync-alt" style="margin-right: 10px;"></i> Refresh
+                    </button>
+                    <button class="btn-primary" onclick="logout()" style="background: var(--danger);">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i> Logout
+                    </button>
+                </div>
+            `;
+        }
+
+        function closeModal(e) {
+            if (e.target === e.currentTarget) {
+                document.getElementById('modal').classList.remove('active');
+            }
+        }
+
+        // Amount Input
+        function enterAmount(num) {
+            if (num === '.' && currentAmount.includes('.')) return;
+            if (currentAmount.length > 8) return;
+            currentAmount += num;
+            updateAmountDisplay();
+        }
+
+        function deleteAmount() {
+            currentAmount = currentAmount.slice(0, -1);
+            updateAmountDisplay();
+        }
+
+        function updateAmountDisplay() {
+            const display = document.getElementById('amountValue');
+            if (display) {
+                display.textContent = '$' + (currentAmount || '0');
+            }
+        }
+
+        // Transactions
+        async function processWithdraw() {
+            const amount = parseFloat(currentAmount);
+            if (!amount || amount <= 0) {
+                showToast('Enter valid amount', 'error');
+                return;
+            }
+
+            showLoading(true);
+            document.getElementById('modal').classList.remove('active');
+
+            try {
+                const response = await fetch('/api/withdraw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: currentToken, amount: amount })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Withdrawal successful!', 'success');
+                    updateDashboard();
+                    loadTransactions();
+                    currentAmount = '';
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Transaction failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function quickDeposit(amount) {
+            showLoading(true);
+            document.getElementById('modal').classList.remove('active');
+
+            try {
+                const response = await fetch('/api/deposit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: currentToken, amount: amount })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Deposit successful!', 'success');
+                    updateDashboard();
+                    loadTransactions();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Deposit failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function customDeposit() {
+            currentModal = 'deposit';
+            document.getElementById('modalTitle').textContent = 'Custom Deposit';
+            document.getElementById('modalContent').innerHTML = getWithdrawHTML().replace('Withdraw Now', 'Deposit Now').replace('processWithdraw()', 'processDeposit()');
+        }
+
+        async function processDeposit() {
+            const amount = parseFloat(currentAmount);
+            if (!amount || amount <= 0) {
+                showToast('Enter valid amount', 'error');
+                return;
+            }
+
+            showLoading(true);
+            document.getElementById('modal').classList.remove('active');
+
+            try {
+                const response = await fetch('/api/deposit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: currentToken, amount: amount })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Deposit successful!', 'success');
+                    updateDashboard();
+                    loadTransactions();
+                    currentAmount = '';
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Deposit failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function quickTransfer(amount) {
+            const toAccount = document.getElementById('transferTo')?.value;
+            if (!toAccount || toAccount.length !== 6) {
+                showToast('Enter valid 6-digit account number', 'error');
+                return;
+            }
+
+            showLoading(true);
+            document.getElementById('modal').classList.remove('active');
+
+            try {
+                const response = await fetch('/api/transfer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: currentToken,
+                        to_account: toAccount,
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Transfer successful!', 'success');
+                    updateDashboard();
+                    loadTransactions();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Transfer failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function customTransfer() {
+            const toAccount = document.getElementById('transferTo')?.value;
+            if (!toAccount) {
+                showToast('Enter recipient account first', 'error');
+                return;
+            }
+            currentModal = 'transfer';
+            document.getElementById('modalTitle').textContent = 'Custom Transfer Amount';
+            document.getElementById('modalContent').innerHTML = getWithdrawHTML().replace('Withdraw Now', 'Transfer Now').replace('processWithdraw()', 'processTransfer()');
+        }
+
+        async function processTransfer() {
+            const amount = parseFloat(currentAmount);
+            const toAccount = document.getElementById('transferTo')?.value;
+
+            if (!amount || amount <= 0) {
+                showToast('Enter valid amount', 'error');
+                return;
+            }
+
+            showLoading(true);
+            document.getElementById('modal').classList.remove('active');
+
+            try {
+                const response = await fetch('/api/transfer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: currentToken,
+                        to_account: toAccount,
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Transfer successful!', 'success');
+                    updateDashboard();
+                    loadTransactions();
+                    currentAmount = '';
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Transfer failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Utilities
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+
+            toast.className = 'toast ' + type;
+            msgEl.textContent = message;
+
+            const icon = toast.querySelector('i');
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'flex' : 'none';
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        async function logout() {
+            if (currentToken) {
+                await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: currentToken })
+                });
+            }
+
+            currentToken = null;
+            currentAccount = null;
+            loginPinBuffer = '';
+            regPinBuffer = '';
+            currentAmount = '';
+
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('bottomNav').style.display = 'none';
+            document.getElementById('authScreen').style.display = 'flex';
+            document.getElementById('loginAccount').value = '';
+
+            updateLoginPinDisplay();
+            showToast('Logged out successfully', 'success');
+        }
+
+        async function showAccountInfo() {
+            document.getElementById('modal').classList.remove('active');
+
+            try {
+                const response = await fetch('/api/account-info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: currentToken })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const acc = data.account;
+                    alert(`Account Information:
+                    
+Account Number: ${acc.number}
+Name: ${acc.name}
+Type: ${acc.type}
+Balance: $${acc.balance.toFixed(2)}
+Daily Limit: $${acc.daily_limit.toFixed(2)}
+Created: ${new Date(acc.created_at).toLocaleDateString()}`);
+                }
+            } catch (error) {
+                showToast('Failed to load account info', 'error');
+            }
+        }
+
+        async function changePin() {
+            document.getElementById('modal').classList.remove('active');
+
+            const currentPin = prompt('Enter current PIN:');
+            if (!currentPin) return;
+
+            const newPin = prompt('Enter new 4-digit PIN:');
+            if (!newPin || newPin.length !== 4) {
+                showToast('PIN must be 4 digits', 'error');
+                return;
+            }
+
+            const confirmPin = prompt('Confirm new PIN:');
+            if (newPin !== confirmPin) {
+                showToast('PINs do not match', 'error');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                const response = await fetch('/api/change-pin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: currentToken,
+                        current_pin: currentPin,
+                        new_pin: newPin
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('PIN changed successfully!', 'success');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Failed to change PIN', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function refreshTransactions() {
+            document.getElementById('modal').classList.remove('active');
+            loadTransactions();
+            showToast('Transactions refreshed', 'success');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+{
+  "accounts": {
+    "1001": {
+      "pin_hash": "scrypt:32768:8:1$vBCwbBVn1XN2lMnM$022ebde7d9c2c5987a4d23bec881198ec26e49d6bed597e9ba8e50631021bbb7ab61e26679a3b37b1e335b2db4641cae0677a2c6e337f3e039a2e0c6594368d0",
+      "balance": 9850.0,
+      "name": "John Doe",
+      "account_type": "Savings",
+      "daily_limit": 1000.0,
+      "daily_withdrawn": 950.0,
+      "last_reset": "2026-02-21T00:20:26.876597",
+      "created_at": "2026-02-21T00:20:26.876612",
+      "preferences": {
+        "fast_cash_amount": 100,
+        "receipt_enabled": true,
+        "language": "en"
+      }
+    },
+    "1002": {
+      "pin_hash": "scrypt:32768:8:1$y6GbZzTBIcpBQonT$0ad502a4fef08a6986b69882633dea36823681b8b8923ef47fbff1e2f2ba1dd6ec9aedab3ece0eb5b1fae7405a38169f03944d955bd88c9b397f274c97608c2c",
+      "balance": 4300.0,
+      "name": "Jane Smith",
+      "account_type": "Checking",
+      "daily_limit": 2000.0,
+      "daily_withdrawn": 200.0,
+      "last_reset": "2026-02-21T00:20:27.088569",
+      "created_at": "2026-02-21T00:20:27.088585",
+      "preferences": {
+        "fast_cash_amount": 200,
+        "receipt_enabled": true,
+        "language": "en"
+      }
+    },
+    "905909": {
+      "pin_hash": "scrypt:32768:8:1$rhglfTIZhraaKWlb$969f009772fe1879567ca8c5d58190c16f116a63b173ca323468f547803ad00c357643985e25a7bdc567a2170f68de3a15b9373cb43a5edddd2d4a4c1020b808",
+      "balance": 500000.0,
+      "name": "Ammar",
+      "account_type": "Savings",
+      "daily_limit": 5000.0,
+      "daily_withdrawn": 0.0,
+      "last_reset": "2026-02-21T17:50:51.970892",
+      "created_at": "2026-02-21T17:50:51.970904",
+      "preferences": {
+        "fast_cash_amount": 100,
+        "receipt_enabled": true,
+        "language": "en"
+      }
+    },
+    "000419": {
+      "pin_hash": "scrypt:32768:8:1$HKsMnApuWPi5A1Hz$ae9c15a4373de4527f33d1f2bf552d7f9773d0c4101e8b23db0379b851791cc5ab07a2f9477feaadc9b5d3dbda52cd00a24344978cd690f467761da73f517e6c",
+      "balance": 500000.0,
+      "name": "Ammar",
+      "account_type": "Savings",
+      "daily_limit": 5000.0,
+      "daily_withdrawn": 0.0,
+      "last_reset": "2026-02-21T17:51:44.442700",
+      "created_at": "2026-02-21T17:51:44.442717",
+      "preferences": {
+        "fast_cash_amount": 100,
+        "receipt_enabled": true,
+        "language": "en"
+      }
+    }
+  },
+  "transactions": [
+    {
+      "id": "ODH6V0Z6G52G",
+      "type": "transfer",
+      "amount": 200.0,
+      "timestamp": "2026-02-21T00:26:17.785231",
+      "from_account": "1001",
+      "to_account": "1002",
+      "balance_after": 4800.0,
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "73ALK9YL8V82",
+      "type": "withdrawal",
+      "amount": 100.0,
+      "timestamp": "2026-02-21T00:26:43.246149",
+      "balance_after": 4700.0,
+      "account_number": "1001",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "MC68SFPX5KIB",
+      "type": "withdrawal",
+      "amount": 100.0,
+      "timestamp": "2026-02-21T00:27:33.697713",
+      "balance_after": 4600.0,
+      "account_number": "1001",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "3HOUJL6NBV71",
+      "type": "withdrawal",
+      "amount": 50.0,
+      "timestamp": "2026-02-21T00:27:42.305156",
+      "balance_after": 4550.0,
+      "account_number": "1001",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "KSHS0JQP9WR5",
+      "type": "deposit",
+      "amount": 200.0,
+      "timestamp": "2026-02-21T00:27:57.109355",
+      "balance_after": 4750.0,
+      "account_number": "1001",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "Y5JG4LRVZFZK",
+      "type": "fast_cash",
+      "amount": 100,
+      "timestamp": "2026-02-21T00:40:51.974180",
+      "balance_after": 4650.0,
+      "account_number": "1001"
+    },
+    {
+      "id": "GU8AGBMD9SO4",
+      "type": "transfer",
+      "amount": 500.0,
+      "timestamp": "2026-02-21T00:42:38.050724",
+      "from_account": "1002",
+      "to_account": "1001",
+      "balance_after": 3200.0,
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "E72IK5XH9WGZ",
+      "type": "fast_cash",
+      "amount": 200,
+      "timestamp": "2026-02-21T00:42:59.902638",
+      "balance_after": 3000.0,
+      "account_number": "1002"
+    },
+    {
+      "id": "7HHL2NF60JBX",
+      "type": "withdrawal",
+      "amount": 500.0,
+      "timestamp": "2026-02-21T00:45:27.317362",
+      "balance_after": 4650.0,
+      "account_number": "1001",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "Y42VR3BP1L9J",
+      "type": "transfer",
+      "amount": 500.0,
+      "timestamp": "2026-02-21T00:45:48.021666",
+      "from_account": "1001",
+      "to_account": "1002",
+      "balance_after": 4150.0,
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "OSHJTQQ4XD1D",
+      "type": "deposit",
+      "amount": 5000.0,
+      "timestamp": "2026-02-21T00:46:01.146630",
+      "balance_after": 9150.0,
+      "account_number": "1001",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "0ELFSLH46JMQ",
+      "type": "transfer",
+      "amount": 200.0,
+      "timestamp": "2026-02-21T00:46:08.756476",
+      "from_account": "1001",
+      "to_account": "1002",
+      "balance_after": 8950.0,
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "210YLOUQ49DP",
+      "type": "transfer",
+      "amount": 500.0,
+      "timestamp": "2026-02-21T00:47:33.993537",
+      "from_account": "1002",
+      "to_account": "1001",
+      "balance_after": 3200.0,
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "4NOV5TTFVEFZ",
+      "type": "deposit",
+      "amount": 500.0,
+      "timestamp": "2026-02-21T00:47:47.765259",
+      "balance_after": 3700.0,
+      "account_number": "1002",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "JMWZTE9EJXBK",
+      "type": "deposit",
+      "amount": 100.0,
+      "timestamp": "2026-02-21T00:47:56.614846",
+      "balance_after": 3800.0,
+      "account_number": "1002",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "E5Y94HRAEJEO",
+      "type": "withdrawal",
+      "amount": 100.0,
+      "timestamp": "2026-02-21T17:07:47.544925",
+      "balance_after": 9350.0,
+      "account_number": "1001",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "4MW5KJZQA5AY",
+      "type": "deposit",
+      "amount": 1000.0,
+      "timestamp": "2026-02-21T17:09:05.380116",
+      "balance_after": 10350.0,
+      "account_number": "1001",
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "KOHN0Y1SYWJ2",
+      "type": "transfer",
+      "amount": 500.0,
+      "timestamp": "2026-02-21T17:09:22.141255",
+      "from_account": "1001",
+      "to_account": "1002",
+      "balance_after": 9850.0,
+      "note": "",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "CSTA5560SQB6",
+      "type": "deposit",
+      "amount": 500000.0,
+      "timestamp": "2026-02-21T17:50:51.970929",
+      "balance_after": 500000.0,
+      "account_number": "905909",
+      "note": "Initial deposit",
+      "sentiment_analysis": null
+    },
+    {
+      "id": "3AT3Q25ELA9T",
+      "type": "deposit",
+      "amount": 500000.0,
+      "timestamp": "2026-02-21T17:51:44.442759",
+      "balance_after": 500000.0,
+      "account_number": "000419",
+      "note": "Initial deposit",
+      "sentiment_analysis": null
+    }
+  ],
+  "failed_attempts": {},
+  "locked_accounts": {},
+  "session_tokens": {
+    "8QND6GMIKJYC": {
+      "account_number": "1001",
+      "created_at": "2026-02-21T00:25:08.202063",
+      "expires_at": "2026-02-21T00:40:08.582012"
+    },
+    "IFPJI8QEEI8Z": {
+      "account_number": "1002",
+      "created_at": "2026-02-21T00:42:20.768340",
+      "expires_at": "2026-02-21T00:57:59.964184"
+    },
+    "YO2V1TPNDTQH": {
+      "account_number": "1001",
+      "created_at": "2026-02-21T00:45:23.742863",
+      "expires_at": "2026-02-21T01:01:08.817725"
+    },
+    "8XPFL9T64XMD": {
+      "account_number": "1002",
+      "created_at": "2026-02-21T00:47:22.151094",
+      "expires_at": "2026-02-21T01:02:56.692046"
+    },
+    "1UF93SSJQD2O": {
+      "account_number": "1001",
+      "created_at": "2026-02-21T16:52:50.009016",
+      "expires_at": "2026-02-21T17:24:22.164165"
+    }
+  }
+}
